@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FormLogin"
+    android:background="@drawable/background"
+    >
+
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="253dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/logo"/>
+
+    <View
+        android:id="@+id/components"
+        style="@style/ContainerComponents"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/edit_text_password"
+        app:layout_constraintStart_toEndOf="@id/edit_text_password"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        android:layout_margin="20dp"/>
+
+    <EditText
+        style="@style/edit_text"
+        android:id="@+id/edit_text_login"
+        android:hint="@string/login"
+        android:textColor="@color/black"
+        android:inputType="textEmailAddress"
+        android:drawableRight="@drawable/icon_login"
+        app:layout_constraintStart_toStartOf="@id/components"
+        app:layout_constraintEnd_toEndOf="@id/components"
+        app:layout_constraintTop_toTopOf="@id/components"
+        android:lines="1"
+        />
+
+    <EditText
+        style="@style/edit_text"
+        android:id="@+id/edit_text_password"
+        android:hint="@string/password"
+        android:textColor="@color/black"
+        android:inputType="textPassword"
+        android:drawableRight="@drawable/icon_password"
+        app:layout_constraintEnd_toEndOf="@id/components"
+        app:layout_constraintStart_toStartOf="@id/components"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_login"
+        android:lines="1"
+    />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_login"
+        style="@style/button"
+        android:text="@string/submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_password"
+        />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/components"
+        android:layout_marginTop="20dp"
+        android:id="@+id/progress_bar"
+        android:visibility="invisible"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup"
+        app:layout_constraintTop_toBottomOf="@id/progress_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/text_signup"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

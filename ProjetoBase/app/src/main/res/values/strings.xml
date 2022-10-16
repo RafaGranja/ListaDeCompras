@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ProjetoBase</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="submit">Submit</string>
+    <string name="signup">Crie uma conta clicando aqui</string>
+</resources>
