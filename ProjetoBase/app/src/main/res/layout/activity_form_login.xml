@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView
+<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FormLogin"
@@ -21,10 +20,10 @@
         android:layout_marginTop="4dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/logo"/>
+        android:id="@+id/logo"
+        />
 
     <View
         android:id="@+id/components"
@@ -33,7 +32,7 @@
         app:layout_constraintStart_toStartOf="@id/edit_text_password"
         app:layout_constraintStart_toEndOf="@id/edit_text_password"
         app:layout_constraintTop_toBottomOf="@id/logo"
-        android:layout_margin="20dp"/>
+        android:layout_margin="30dp"/>
 
     <EditText
         style="@style/edit_text"
@@ -68,18 +67,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_text_password"
+        android:onClick="LoadLogin"
         />
 
     <ProgressBar
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/components"
         android:layout_marginTop="20dp"
-        android:id="@+id/progress_bar"
         android:visibility="invisible"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/components" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,11 +88,26 @@
         app:layout_constraintTop_toBottomOf="@id/progress_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="20dp"
-        android:textColor="@color/black"
+        android:drawableRight="@drawable/ic_baseline_info_24"
+        android:textSize="18dp"
+        android:textColor="@color/gray"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/text_signup"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/change_password"
+        app:layout_constraintTop_toBottomOf="@id/text_signup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableRight="@drawable/ic_baseline_cancel_24"
+        android:textSize="18dp"
+        android:textColor="@color/gray"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
-        android:id="@+id/text_signup"
+        android:id="@+id/text_passwordchange"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

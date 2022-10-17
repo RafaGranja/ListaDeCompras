@@ -8,9 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#EAEAEA</color>
-    <color name="blue_light">#70E0D5</color>
+    <color name="blue_light">#02AFAE</color>
+    <color name="blue1">#0F43AE</color>
+    <color name="blue2">#0A2378</color>
+    <color name="blue_marine">#0A1C5C</color>
     <color name="yellow">#FFC001</color>
     <color name="yellow_light">#FFD967</color>
     <color name="red">#CE0D0D</color>
+    <color name="green_blue">#25D5A6</color>
 
 </resources>
