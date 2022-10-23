@@ -2,7 +2,10 @@
     <string name="app_name">ProjetoBase</string>
     <string name="login">Usuario</string>
     <string name="password">Senha</string>
+    <string name="confirmpassword">Confirmar a Senha</string>
     <string name="submit">Entrar</string>
     <string name="signup">Cadastre-se</string>
     <string name="change_password">Esqueci a senha</string>
+    <string name="email">Email</string>
+    <string name="signupButton">Cadastrar</string>
 </resources>
