@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -117,12 +118,18 @@ public class FormLogin extends AppCompatActivity {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(_login,_pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
+                if(task.isSuccessful() && FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
                     LogaUsuario();
+                }
+                else if(!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
+                    Toast(WARNING,"Verifique seu email antes de Prosseguir");
                 }
                 else{
                     try {
                         throw task.getException();
+                    }
+                    catch (FirebaseNetworkException e){
+                        ErroLogin(WARNING,"Sem conexão com a Internet");
                     }
                     catch (Exception e){
                         ErroLogin(ERROR,"Erro ao autenticar usuário, cheque os dados");
@@ -145,7 +152,12 @@ public class FormLogin extends AppCompatActivity {
         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(current_user!=null){
-            TelaPrincipal();
+            if(current_user.isEmailVerified()) {
+                TelaPrincipal();
+            }
+            else{
+                Toast(WARNING,"Verifique seu email antes de prosseguir");
+            }
         }
     }
 

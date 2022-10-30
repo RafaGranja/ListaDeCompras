@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:text="Carregando!"
         android:textColor="@color/white"
+        android:textAlignment="center"
         android:textSize="18dp"
         android:textStyle="bold"
         />

@@ -6,11 +6,13 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +26,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
+import java.io.*;
+import okhttp3.*;
 
 public class FormCadastro extends AppCompatActivity {
 
@@ -109,19 +114,16 @@ public class FormCadastro extends AppCompatActivity {
         if(login.getText().length()==0){
             Toast(ERROR,"Insira um usuário válido");
         }
-        else if(login.getText().toString().contains(" ")){
-            Toast(ERROR,"O usuário não deve conter espaços brancos");
-        }
         else if(login.getText().length()>15){
             Toast(ERROR,"O usuário não deve conter mais de 15 caracteres");
         }
-        else if(email.getText().length()==0){
+        else if(email.getText().toString().isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
             Toast(ERROR,"Insira um e-mail válido");
         }
-        else if(pass1.getText().length()==0){
+        else if(pass1.getText().toString().isEmpty()){
             Toast(ERROR,"Insira uma senha válida");
         }
-        else if(pass2.getText().length()==0){
+        else if(pass2.getText().toString().isEmpty()){
             Toast(WARNING,"Confirme sua senha");
 
         }
@@ -146,29 +148,33 @@ public class FormCadastro extends AppCompatActivity {
 
         String _email = email.getText().toString();
         String _senha = pass1.getText().toString();
+        String key = "vg5VtisJk2rVVh8unO44KYOM0l7SQS35";
+        String url = "https://api.apilayer.com/email_verification/check?apikey=" + key + "&email=" + _email + "/json/";
+        String api;
 
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(_email,_senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        API autenticaEmail = new API();
+        autenticaEmail.execute("viacep.com.br/ws/01001000/json/");
+        api = autenticaEmail.result;
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(_email, _senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    SalvaDadosUsario();
+                if (task.isSuccessful()) {
                     CadastroCompleto();
-                }
-                else{
+                    SalvaDadosUsario();
+                } else {
 
                     try {
                         throw task.getException();
-                    }
-                    catch (FirebaseAuthWeakPasswordException e){
-                        ErroCadastro(WARNING,e.getReason().toString());
-                    }
-                    catch (FirebaseAuthUserCollisionException e){
-                        ErroCadastro(WARNING,"Esta conta já foi cadastrada anteriormente");
-                    }
-                    catch (FirebaseAuthInvalidCredentialsException e){
+                    } catch (FirebaseAuthWeakPasswordException e) {
+                        ErroCadastro(WARNING, "A senha deve conter no mínimo 6 caracteres");
+                    } catch (FirebaseAuthUserCollisionException e) {
+                        ErroCadastro(WARNING, "Esta conta já foi cadastrada anteriormente");
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
                         ErroCadastro(WARNING, "O e-mail digitado não válido");
-                    }
-                    catch (Exception e){
+                    } catch (FirebaseNetworkException e) {
+                        ErroCadastro(WARNING, "Sem conexão com a Internet");
+                    } catch (Exception e) {
                         ErroCadastro(ERROR, "Erro ao cadastrar usuário");
                     }
 
@@ -176,6 +182,44 @@ public class FormCadastro extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void EnviaEmail(){
+        FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(FormCadastro.this, FormLogin.class);
+                            startActivity(intent);
+                        }
+                    }, 2000);
+                }
+                else{
+                    Toast(ERROR,"Ocorreu um erro ao enviar email de autenticação");
+                }
+
+            }
+        });
+    }
+
+    private class API extends AsyncTask<String, String, String>{
+
+        String result;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String ret = Conexao.getApi(strings[0]);
+            return ret;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            result=s;
+        }
     }
 
     private void SalvaDadosUsario(){
@@ -217,8 +261,7 @@ public class FormCadastro extends AppCompatActivity {
                 pass2.setFocusableInTouchMode(true);
                 pass2.setText("");
                 button_sign_up.setClickable(true);
-                Intent intent = new Intent(FormCadastro.this, FormLogin.class);
-                startActivity(intent);
+                EnviaEmail();
             }
         },2000);
     }
