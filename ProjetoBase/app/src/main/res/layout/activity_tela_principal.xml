@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".TelaPrincipal"
+        android:background="@drawable/background">
+
+        <ImageView
+            android:layout_width="240dp"
+            android:layout_height="253dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/logo"
+            />
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_light"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo"
+            android:textSize="50dp"
+            android:text="Bem Vindo!"
+            android:fontFamily="sans-serif-condensed"
+            />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_light"
+            app:layout_constraintStart_toStartOf="@id/text1"
+            app:layout_constraintEnd_toEndOf="@id/text1"
+            app:layout_constraintTop_toBottomOf="@id/text1"
+            android:textSize="35dp"
+            android:text="Novas funcionalidades em breve!"
+            android:layout_margin="40dp"
+            android:textAlignment="center"
+            android:fontFamily="sans-serif-condensed"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_sign_out"
+            style="@style/button"
+            android:text="Deslogar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text2"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

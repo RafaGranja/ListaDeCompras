@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "410856540987",
+    "project_id": "lista-de-compras-5558d",
+    "storage_bucket": "lista-de-compras-5558d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410856540987:android:d4e55b81cfcc6cd249c51e",
+        "android_client_info": {
+          "package_name": "com.example.projetobase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410856540987-a75opmph54n8jjk3603km6bjej4pdabp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBadfj2HXjzfS-yBXPFsqXyqv6nDBvOI2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410856540987-a75opmph54n8jjk3603km6bjej4pdabp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

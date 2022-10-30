@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:id="@+id/container_toast"
+    android:background="@drawable/sucess_toast"
+    android:padding="5dp"
+    android:layout_marginBottom="80dp"
+    tools:context=".FormLogin">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sucess_toast_ic"
+        android:id="@+id/image_message"
+        />
+
+    <TextView
+        android:id="@+id/text_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Carregando!"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        />
+</LinearLayout>

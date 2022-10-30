@@ -36,8 +36,7 @@
             android:layout_marginRight="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_signup" />
-
+            app:layout_constraintTop_toBottomOf="@+id/text_signup"/>
         <EditText
             android:id="@+id/nameSignup"
             style="@style/edit_text"
@@ -60,30 +59,59 @@
             app:layout_constraintStart_toStartOf="@id/containerComponents"
             app:layout_constraintTop_toBottomOf="@id/nameSignup" />
 
-        <EditText
-            android:id="@+id/passSignup"
-            style="@style/edit_text"
-            android:drawableRight="@drawable/icon_password"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColor="@color/black"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:id="@+id/edit_text_password1_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="@id/containerComponents"
             app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintTop_toBottomOf="@id/emailSignup" />
+            app:layout_constraintTop_toBottomOf="@id/emailSignup"
+            app:passwordToggleDrawable="@drawable/icon_password"
+            app:passwordToggleTint="@color/black"
+            app:placeholderTextColor="@color/black"
+            app:passwordToggleEnabled="true"
+            android:textColorHint="@color/black"
+            android:visibility="visible"
+            >
 
-        <EditText
-            android:id="@+id/passSignupConfirm"
-            style="@style/edit_text"
-            android:layout_marginBottom="10dp"
-            android:drawableRight="@drawable/icon_password"
-            android:hint="@string/confirmpassword"
-            android:inputType="textPassword"
-            android:textColor="@color/black"
+            <EditText
+                android:id="@+id/passSignup"
+                style="@style/edit_text"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:textColorHint="@color/black"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:textColor="@color/black"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:id="@+id/edit_text_password2_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="@id/containerComponents"
             app:layout_constraintEnd_toEndOf="@id/containerComponents"
             app:layout_constraintStart_toStartOf="@id/containerComponents"
-            app:layout_constraintTop_toBottomOf="@id/passSignup" />
+            app:layout_constraintTop_toBottomOf="@id/edit_text_password1_parent"
+            app:passwordToggleDrawable="@drawable/icon_password"
+            app:passwordToggleTint="@color/black"
+            app:placeholderTextColor="@color/black"
+            app:hintTextColor="@color/black"
+            app:passwordToggleEnabled="true"
+            android:textColorHint="@color/black"
+            >
 
+            <EditText
+                android:id="@+id/passSignupConfirm"
+                style="@style/edit_text"
+                android:hint="@string/confirmpassword"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:textColorHint="@color/black"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:textColor="@color/black"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
         <ProgressBar
             android:id="@+id/progress_bar_signup"
             android:layout_width="wrap_content"
@@ -98,7 +126,6 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_sing_up"
             style="@style/button"
-            android:onClick="LoadSignUp"
             android:text="@string/signupButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="parent"

@@ -29,36 +29,48 @@
         android:id="@+id/components"
         style="@style/ContainerComponents"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/edit_text_password"
-        app:layout_constraintStart_toEndOf="@id/edit_text_password"
+        app:layout_constraintStart_toStartOf="@id/edit_text_password_parent"
+        app:layout_constraintStart_toEndOf="@id/edit_text_password_parent"
         app:layout_constraintTop_toBottomOf="@id/logo"
         android:layout_margin="30dp"/>
 
     <EditText
         style="@style/edit_text"
         android:id="@+id/edit_text_login"
-        android:hint="@string/login"
+        android:hint="@string/email"
         android:textColor="@color/black"
         android:inputType="textEmailAddress"
-        android:drawableRight="@drawable/icon_login"
+        android:drawableRight="@drawable/icon_email"
         app:layout_constraintStart_toStartOf="@id/components"
         app:layout_constraintEnd_toEndOf="@id/components"
         app:layout_constraintTop_toTopOf="@id/components"
         android:lines="1"
         />
 
-    <EditText
-        style="@style/edit_text"
-        android:id="@+id/edit_text_password"
-        android:hint="@string/password"
-        android:textColor="@color/black"
-        android:inputType="textPassword"
-        android:drawableRight="@drawable/icon_password"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:id="@+id/edit_text_password_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/components"
         app:layout_constraintStart_toStartOf="@id/components"
         app:layout_constraintTop_toBottomOf="@id/edit_text_login"
-        android:lines="1"
-    />
+        app:passwordToggleDrawable="@drawable/icon_password"
+        app:passwordToggleTint="@color/black"
+        app:placeholderTextColor="@color/black"
+        android:textColorHint="@color/black"
+        app:passwordToggleEnabled="true"
+        >
+
+        <EditText
+            android:id="@+id/edit_text_password"
+            style="@style/edit_text"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_login"
@@ -66,8 +78,7 @@
         android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_password"
-        android:onClick="LoadLogin"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_password_parent"
         />
 
     <ProgressBar
