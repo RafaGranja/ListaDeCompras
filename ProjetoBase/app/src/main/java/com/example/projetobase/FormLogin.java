@@ -118,24 +118,24 @@ public class FormLogin extends AppCompatActivity {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(_login,_pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
-                    if(task.isSuccessful()) {
+                if(task.isSuccessful()) {
+                    if(FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
                         LogaUsuario();
                     }
                     else{
-                        try {
-                            throw task.getException();
-                        }
-                        catch (FirebaseNetworkException e){
-                            ErroLogin(WARNING,"Sem conexão com a Internet");
-                        }
-                        catch (Exception e){
-                            ErroLogin(ERROR,"Erro ao autenticar usuário, cheque os dados");
-                        }
+                        Toast(WARNING,"Verifique seu email antes de Prosseguir");
                     }
                 }
                 else{
-                    Toast(WARNING,"Verifique seu email antes de Prosseguir");
+                    try {
+                        throw task.getException();
+                    }
+                    catch (FirebaseNetworkException e){
+                        ErroLogin(WARNING,"Sem conexão com a Internet");
+                    }
+                    catch (Exception e){
+                        ErroLogin(ERROR,"Erro ao autenticar usuário, cheque os dados");
+                    }
                 }
             }
         });
