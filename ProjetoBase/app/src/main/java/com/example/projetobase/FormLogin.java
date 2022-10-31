@@ -123,7 +123,7 @@ public class FormLogin extends AppCompatActivity {
                         LogaUsuario();
                     }
                     else{
-                        Toast(WARNING,"Verifique seu email antes de Prosseguir");
+                        ErroLogin(WARNING,"Verifique seu email antes de Prosseguir");
                     }
                 }
                 else{
