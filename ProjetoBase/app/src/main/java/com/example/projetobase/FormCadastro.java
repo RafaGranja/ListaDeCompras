@@ -262,6 +262,7 @@ public class FormCadastro extends AppCompatActivity {
                 pass2.setText("");
                 button_sign_up.setClickable(true);
                 EnviaEmail();
+                FirebaseAuth.getInstance().signOut();
             }
         },2000);
     }
