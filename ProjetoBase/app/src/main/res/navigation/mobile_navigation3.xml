@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation3"
+    app:startDestination="@+id/nav_new_list_fragment">
+
+    <fragment
+        android:id="@+id/nav_new_list_fragment"
+        android:name="com.example.projetobase.ui.new_list_fragment.NewListFragment"
+        android:label="@string/new_list"
+        tools:layout="@layout/fragment_new_list" />
+
+    <fragment
+        android:id="@+id/nav_archive_list_fragment"
+        android:name="com.example.projetobase.ui.archive_list_fragment.ArchiveListFragment"
+        android:label="@string/find_list"
+        tools:layout="@layout/fragment_archive_list" />
+
+    <fragment
+        android:id="@+id/nav_analytics_fragment"
+        android:name="com.example.projetobase.ui.analytics_fragment.AnalyticsFragment"
+        android:label="@string/Analise"
+        tools:layout="@layout/fragment_analytics" />
+
+    <fragment
+        android:id="@+id/nav_account_fragment"
+        android:name="com.example.projetobase.ui.account_fragment.AccountFragment"
+        android:label="@string/account"
+        tools:layout="@layout/fragment_account" />
+
+</navigation>

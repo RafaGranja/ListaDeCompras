@@ -190,13 +190,10 @@ public class FormCadastro extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(FormCadastro.this, FormLogin.class);
-                            startActivity(intent);
-                        }
-                    }, 2000);
+
+                    Intent intent = new Intent(FormCadastro.this, FormLogin.class);
+                    startActivity(intent);
+
                 }
                 else{
                     Toast(ERROR,"Ocorreu um erro ao enviar email de autenticação");
@@ -224,10 +221,12 @@ public class FormCadastro extends AppCompatActivity {
 
     private void SalvaDadosUsario(){
         String _user = login.getText().toString();
+        String _email = email.getText().toString();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String,Object> users = new HashMap<>();
         users.put("login",_user);
+        users.put("email",_email);
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 

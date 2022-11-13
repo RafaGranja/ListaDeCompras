@@ -13,6 +13,16 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColorHint">@color/black</item>
+        <item name="android:textColor">@color/black</item>
         <item name="progressBarStyle">@color/blue_light</item>
     </style>
+
+    <style name="Theme.ProjetoBase.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ProjetoBase.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.ProjetoBase.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
