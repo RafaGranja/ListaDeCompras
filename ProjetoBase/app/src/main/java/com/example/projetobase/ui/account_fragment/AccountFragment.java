@@ -12,15 +12,15 @@ import com.example.projetobase.databinding.FragmentAccountBinding;
 
 public class AccountFragment extends Fragment {
 
-private FragmentAccountBinding binding;
+    private FragmentAccountBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         AccountViewModel slideshowViewModel =
                 new ViewModelProvider(this).get(AccountViewModel.class);
 
-    binding = FragmentAccountBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentAccountBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         final TextView textView = binding.textAccount;
         slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

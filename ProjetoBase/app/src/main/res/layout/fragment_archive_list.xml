@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.archive_list_fragment.ArchiveListFragment"
-    android:background="@drawable/background2">
+    tools:context=".ui.archive_list_fragment.ArchiveListFragment">
 
     <TextView
         android:id="@+id/text_archive_list"

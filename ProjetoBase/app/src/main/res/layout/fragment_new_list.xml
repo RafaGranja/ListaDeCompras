@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.new_list_fragment.NewListFragment"
-    android:background="@drawable/background2">
+    tools:context=".ui.new_list_fragment.NewListFragment">
 
     <TextView
         android:id="@+id/text_new_list"

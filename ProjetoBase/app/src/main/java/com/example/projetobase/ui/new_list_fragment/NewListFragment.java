@@ -12,15 +12,15 @@ import com.example.projetobase.databinding.FragmentNewListBinding;
 
 public class NewListFragment extends Fragment {
 
-private FragmentNewListBinding binding;
+    private FragmentNewListBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         NewListViewModel galleryViewModel =
                 new ViewModelProvider(this).get(NewListViewModel.class);
 
-    binding = FragmentNewListBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentNewListBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         final TextView textView = binding.textNewList;
         galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

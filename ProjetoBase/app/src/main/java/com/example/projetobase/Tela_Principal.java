@@ -1,7 +1,10 @@
 package com.example.projetobase;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.Gravity;
@@ -95,6 +98,7 @@ public class Tela_Principal extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(Tela_Principal.this, FormLogin.class);
                 startActivity(intent);
+
             default:
                 return super.onOptionsItemSelected(item);
         }

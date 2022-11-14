@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.analytics_fragment.AnalyticsFragment"
-    android:background="@drawable/background2">
+    tools:context=".ui.analytics_fragment.AnalyticsFragment">
 
     <TextView
         android:id="@+id/text_analytics"

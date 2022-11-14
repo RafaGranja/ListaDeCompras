@@ -28,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.OAuthCredential;
 
 
 public class FormLogin extends AppCompatActivity {
@@ -65,6 +66,16 @@ public class FormLogin extends AppCompatActivity {
             }
         });
 
+        text_passwordchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(FormLogin.this,RecuperarSenha.class);
+                startActivity(intent);
+
+            }
+        });
+
         password.addTextChangedListener(
                 new TextWatcher(){
                     @Override
@@ -87,6 +98,7 @@ public class FormLogin extends AppCompatActivity {
 
 
     }
+
     /** Called when the user touches the button */
     public void LoadLogin() {
 
@@ -112,8 +124,8 @@ public class FormLogin extends AppCompatActivity {
 
     private void AutenticarUsuario(){
 
-        String _login = login.getText().toString();
-        String _pass = password.getText().toString();
+        String _login = login.getText().toString().trim();
+        String _pass = password.getText().toString().trim();
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword(_login,_pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override

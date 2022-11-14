@@ -117,13 +117,13 @@ public class FormCadastro extends AppCompatActivity {
         else if(login.getText().length()>15){
             Toast(ERROR,"O usuário não deve conter mais de 15 caracteres");
         }
-        else if(email.getText().toString().isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
+        else if(email.getText().toString().trim().isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.getText().toString().trim()).matches()){
             Toast(ERROR,"Insira um e-mail válido");
         }
-        else if(pass1.getText().toString().isEmpty()){
+        else if(pass1.getText().toString().trim().isEmpty()){
             Toast(ERROR,"Insira uma senha válida");
         }
-        else if(pass2.getText().toString().isEmpty()){
+        else if(pass2.getText().toString().trim().isEmpty()){
             Toast(WARNING,"Confirme sua senha");
 
         }
@@ -146,8 +146,8 @@ public class FormCadastro extends AppCompatActivity {
 
     private void CadastrarUsuario(){
 
-        String _email = email.getText().toString();
-        String _senha = pass1.getText().toString();
+        String _email = email.getText().toString().trim();
+        String _senha = pass1.getText().toString().trim();
         String key = "vg5VtisJk2rVVh8unO44KYOM0l7SQS35";
         String url = "https://api.apilayer.com/email_verification/check?apikey=" + key + "&email=" + _email + "/json/";
         String api;
@@ -220,8 +220,8 @@ public class FormCadastro extends AppCompatActivity {
     }
 
     private void SalvaDadosUsario(){
-        String _user = login.getText().toString();
-        String _email = email.getText().toString();
+        String _user = login.getText().toString().trim();
+        String _email = email.getText().toString().trim();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String,Object> users = new HashMap<>();

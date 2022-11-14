@@ -37,6 +37,7 @@
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/ic_menu_camera.xml" value="0.177" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.177" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.177" />
+        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/icon_background.xml" value="0.1835" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/icon_email.xml" value="0.177" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/icon_login.xml" value="0.163" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/icon_password.xml" value="0.174" />
@@ -48,6 +49,7 @@
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_form_cadastro.xml" value="0.22" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_form_login.xml" value="0.22" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_main.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_recuperar_senha.xml" value="0.22402736212056434" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_tela_principal.xml" value="0.2015625" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_tela_principal2.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/app_bar_tela_principal.xml" value="0.27291666666666664" />

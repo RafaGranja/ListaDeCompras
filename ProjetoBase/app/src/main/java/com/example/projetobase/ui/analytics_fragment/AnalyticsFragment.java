@@ -12,15 +12,15 @@ import com.example.projetobase.databinding.FragmentAnalyticsBinding;
 
 public class AnalyticsFragment extends Fragment {
 
-private FragmentAnalyticsBinding binding;
+    private FragmentAnalyticsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         AnalyticsViewModel slideshowViewModel =
                 new ViewModelProvider(this).get(AnalyticsViewModel.class);
 
-    binding = FragmentAnalyticsBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentAnalyticsBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         final TextView textView = binding.textAnalytics;
         slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

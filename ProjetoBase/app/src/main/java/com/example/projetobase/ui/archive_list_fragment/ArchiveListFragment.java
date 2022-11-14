@@ -12,15 +12,15 @@ import com.example.projetobase.databinding.FragmentArchiveListBinding;
 
 public class ArchiveListFragment extends Fragment {
 
-private FragmentArchiveListBinding binding;
+    private FragmentArchiveListBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         ArchiveListViewModel homeViewModel =
                 new ViewModelProvider(this).get(ArchiveListViewModel.class);
 
-    binding = FragmentArchiveListBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentArchiveListBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         final TextView textView = binding.textArchiveList;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

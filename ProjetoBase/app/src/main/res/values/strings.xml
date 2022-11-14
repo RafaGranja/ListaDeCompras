@@ -20,6 +20,9 @@
     <string name="Analise">Estatísticas</string>
     <string name="account">Conta</string>
     <string name="signout">Sair</string>
+    <string name="recuepass">Recupere sua \nsenha</string>
+    <string name="recuepass2">Será enviado email \npara recuperar senha</string>
+    <string name="recuepass_button">Enviar email</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
