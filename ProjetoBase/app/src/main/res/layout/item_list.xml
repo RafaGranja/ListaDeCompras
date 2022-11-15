@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="5dp"
+    app:contentPadding="10dp"
+    android:layout_gravity="top"
+    android:background="@drawable/background"
+    android:orientation="horizontal">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="-10dp">
+
+        <EditText
+            style="@style/edit_text"
+            android:id="@+id/edit_produto"
+            android:hint="@string/Produto"
+            android:textColor="?android:textColor"
+            android:textColorHint="?android:textColor"
+            android:backgroundTint="?attr/colorOnSecondary"
+            android:drawableRight="@drawable/ic_baseline_help_24"
+            android:lines="1"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/edit_produto_qtd"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2dp"
+            android:layout_width="190dp"
+
+            />
+        <EditText
+            style="@style/edit_text"
+            android:id="@+id/edit_produto_qtd"
+            android:hint="@string/Quantidade"
+            android:textColor="?android:textColor"
+            android:textColorHint="?android:textColor"
+            android:backgroundTint="?attr/colorOnSecondary"
+            android:drawableRight="@drawable/ic_baseline_unfold_more_24"
+            android:lines="1"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintStart_toEndOf="@id/edit_produto"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="120dp"
+            android:layout_height="65dp"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/delete_item_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@android:drawable/ic_delete"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/edit_produto_desc"
+            app:layout_constraintTop_toBottomOf="@id/edit_produto"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2dp"
+            />
+        <EditText
+            style="@style/edit_text"
+            android:id="@+id/edit_produto_desc"
+            android:hint="@string/Observacoes"
+            android:textColor="?android:textColor"
+            android:textColorHint="?android:textColor"
+            android:backgroundTint="?attr/colorOnSecondary"
+            android:drawableRight="@drawable/ic_baseline_idea_24"
+            android:lines="1"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintTop_toBottomOf="@id/edit_produto_qtd"
+            app:layout_constraintStart_toEndOf="@id/delete_item_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="250dp"
+            app:flow_horizontalAlign="end"
+            android:layout_marginTop="5dp"
+            />
+        <TextView
+            android:id="@+id/text_position"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
