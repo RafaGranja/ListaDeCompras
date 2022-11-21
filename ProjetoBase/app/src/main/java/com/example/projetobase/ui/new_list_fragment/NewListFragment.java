@@ -24,6 +24,7 @@ public class NewListFragment extends Fragment {
 
         final TextView textView = binding.textNewList;
         galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 

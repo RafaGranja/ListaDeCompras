@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ProjetoBase</string>
+    <string name="app_name" translatable="false">ProjetoBase</string>
     <string name="login">Usuario</string>
     <string name="password">Senha</string>
     <string name="confirmpassword">Confirmar a Senha</string>
@@ -21,8 +21,11 @@
     <string name="account">Conta</string>
     <string name="signout">Sair</string>
     <string name="recuepass">Recupere sua \nsenha</string>
-    <string name="recuepass2">Será enviado email \npara recuperar senha</string>
+    <string name="recuepass2">Informe o e-mail da conta \nque deseja recuperar a senha</string>
     <string name="recuepass_button">Enviar email</string>
+    <string name="Produto">Produto</string>
+    <string name="Quantidade">Quant.</string>
+    <string name="Observacoes">Observações</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>

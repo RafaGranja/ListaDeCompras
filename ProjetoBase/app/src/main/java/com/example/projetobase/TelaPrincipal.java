@@ -45,7 +45,7 @@ public class TelaPrincipal extends AppCompatActivity {
 
     private void IniciaComponentes(){
 
-        button_sign_out = findViewById(R.id.button_sign_out);
+        //button_sign_out = findViewById(R.id.button_sign_out);
 
     }
 

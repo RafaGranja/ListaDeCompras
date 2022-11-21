@@ -1,28 +1,35 @@
 package com.example.projetobase;
 
-import android.app.Activity;
-import android.content.ClipData;
+
+import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
 import android.os.Bundle;
-import android.text.Layout;
+import android.os.Handler;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.OverScroller;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -30,6 +37,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projetobase.databinding.ActivityTelaPrincipalBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +48,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import org.w3c.dom.Text;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class Tela_Principal extends AppCompatActivity {
 
@@ -49,6 +61,14 @@ public class Tela_Principal extends AppCompatActivity {
 
     private TextView account_name;
     private TextView account_email;
+
+    List<NewListAdapter.Item> itens = new LinkedList<>();;
+    NewListAdapter adapter;
+    int counter=0;
+    FloatingActionButton ButtonAdiconarCard;
+    FloatingActionButton ButtonDeletarLista;
+    FloatingActionButton ButtonSalvarLista;
+
     //private int logout;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -66,14 +86,8 @@ public class Tela_Principal extends AppCompatActivity {
 
         setSupportActionBar(binding.appBarTelaPrincipal.toolbar);
 
-        binding.appBarTelaPrincipal.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         DrawerLayout drawer = binding.drawerLayout;
+
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -82,11 +96,112 @@ public class Tela_Principal extends AppCompatActivity {
                 R.id.nav_analytics_fragment, R.id.nav_account_fragment)
                 .setOpenableLayout(drawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_tela_principal);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
         CarregaComponenetes();
+
+    }
+
+    public void ConfiguraLista(){
+        new Handler().postDelayed(new Runnable() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public void run() {
+
+                RecyclerView recycle = findViewById(R.id.item_list);
+                recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                adapter = new NewListAdapter(itens);
+                recycle.setAdapter(adapter);
+                ButtonSalvarLista = findViewById(R.id.app_bar_tela_principal).findViewById(R.id.fab_save_list);
+                ButtonDeletarLista = findViewById(R.id.app_bar_tela_principal).findViewById(R.id.fab_delete_list);
+                ButtonAdiconarCard = findViewById(R.id.app_bar_tela_principal).findViewById(R.id.fab_new_list);
+                ButtonAdiconarCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        itens.add(0,new NewListAdapter.Item());
+                        counter++;
+                        adapter.notifyItemInserted(0);
+                        findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
+                        recycle.smoothScrollToPosition(0);
+                        ReindexaLista();
+
+                    }
+                });
+                ButtonAdiconarCard.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+
+                        if(ButtonSalvarLista.getVisibility()==View.INVISIBLE) {
+                            ButtonSalvarLista.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            ButtonSalvarLista.setVisibility(View.INVISIBLE);
+                        }
+                        if(ButtonDeletarLista.getVisibility()==View.INVISIBLE) {
+                            ButtonDeletarLista.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            ButtonDeletarLista.setVisibility(View.INVISIBLE);
+                        }
+
+                        ButtonSalvarLista.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                SalvaLista();
+
+                            }
+                        });
+
+                        ButtonDeletarLista.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                DeletaLista();
+
+                            }
+                        });
+
+                        return true;
+                    }
+                });
+
+                recycle.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                        ButtonSalvarLista.setVisibility(View.INVISIBLE);
+                        ButtonDeletarLista.setVisibility(View.INVISIBLE);
+                        return false;
+                    }
+                });
+                ReindexaLista();
+            }
+        },500);
+
+    }
+
+    public void SalvaLista(){
+
+    }
+
+    public void DeletaLista(){
+
+        itens.clear();
+        ReindexaLista();
+        Toast(SUCCESS,"Lista limpa!");
+
+    }
+
+    public void ReindexaLista(){
+        adapter.update(itens);
+        if(itens.isEmpty()==false){
+            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
+        }
+
     }
 
     @Override
@@ -109,7 +224,6 @@ public class Tela_Principal extends AppCompatActivity {
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         DocumentReference doc = db.collection("SOCIAL").document(userID);
-
 
         doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
 
@@ -149,10 +263,42 @@ public class Tela_Principal extends AppCompatActivity {
         account_email = (TextView)header.findViewById(R.id.account_email);
         buscaInformacoes();
 
-        /*View menu =  (View)findViewById(R.id.app_bar_tela_principal);
-        Toolbar bar= (Toolbar)menu.findViewById(R.id.toolbar);
-        logout = bar.findViewById(R.id.logout).getId();*/
+        ConfiguraLista();
 
+        //RetomaLista();
+
+        nav.getMenu().findItem(R.id.nav_new_list_fragment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                ConfiguraLista();
+                return false;
+            }
+        });
+
+
+    }
+
+    public void RetomaLista(){
+
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DocumentReference doc = db.collection("CURRENT_LIST").document(userID);
+
+        doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                if(value != null ){
+
+                    itens = (List<NewListAdapter.Item>)value.get("ITENS");
+                    Log.d("db","Sucesso ao salvar dados da atual lista do usuario "+userID);
+                    ReindexaLista();
+
+                }
+
+            }
+        });
 
     }
 

@@ -2,6 +2,7 @@ package com.example.projetobase;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 public class NewListAdapter extends RecyclerView.Adapter<NewList> {
@@ -99,6 +106,30 @@ public class NewListAdapter extends RecyclerView.Adapter<NewList> {
     public void update(List<Item> mDataset){
         this.itens = mDataset;
         notifyDataSetChanged();
+
+        SalvaLista();
+
+    }
+
+    public void SalvaLista(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String,Object> item = new HashMap<>();
+        item.put("ITENS",itens);
+
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DocumentReference doc = db.collection("CURRENT_LIST").document(userID);
+        doc.set(item).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("db","Sucesso ao salvar dados da atual lista do usuario "+userID);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("db", "Erro ao salvar dados da atual lista do usuario " + userID +" "+ e.toString());
+            }
+        });
     }
 
 }
@@ -198,6 +229,7 @@ class NewList extends RecyclerView.ViewHolder{
         });
 
 
+
     }
 
     public NewList linkAdapter(NewListAdapter adapter){
@@ -206,5 +238,6 @@ class NewList extends RecyclerView.ViewHolder{
             return this;
 
     }
+
 
 }
