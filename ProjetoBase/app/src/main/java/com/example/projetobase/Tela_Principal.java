@@ -1,14 +1,13 @@
 package com.example.projetobase;
 
 
+import static com.example.projetobase.NewListAdapter.*;
+
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,20 +15,21 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.OverScroller;
-import android.widget.ScrollView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -39,6 +39,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.projetobase.databinding.ActivityTelaPrincipalBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +49,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,12 +64,14 @@ public class Tela_Principal extends AppCompatActivity {
     private TextView account_name;
     private TextView account_email;
 
-    List<NewListAdapter.Item> itens = new LinkedList<>();;
-    NewListAdapter adapter;
-    int counter=0;
-    FloatingActionButton ButtonAdiconarCard;
-    FloatingActionButton ButtonDeletarLista;
-    FloatingActionButton ButtonSalvarLista;
+    public List<Item> itens;
+    public NewListAdapter adapter;
+    public int counter=0;
+    public FloatingActionButton ButtonAdiconarCard;
+    public FloatingActionButton ButtonDeletarLista;
+    public FloatingActionButton ButtonSalvarLista;
+    public SwipeRefreshLayout refresh_new_list;
+    public AlertDialog alerta_salvar_lista;
 
     //private int logout;
 
@@ -81,6 +85,7 @@ public class Tela_Principal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        itens = new LinkedList<>();
         binding = ActivityTelaPrincipalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -111,6 +116,7 @@ public class Tela_Principal extends AppCompatActivity {
             @Override
             public void run() {
 
+                Log.d("ConfiguraLista","119 - Vou configurar lista");
                 RecyclerView recycle = findViewById(R.id.item_list);
                 recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 adapter = new NewListAdapter(itens);
@@ -121,7 +127,7 @@ public class Tela_Principal extends AppCompatActivity {
                 ButtonAdiconarCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        itens.add(0,new NewListAdapter.Item());
+                        itens.add(0,new Item());
                         counter++;
                         adapter.notifyItemInserted(0);
                         findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
@@ -151,7 +157,7 @@ public class Tela_Principal extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
 
-                                SalvaLista();
+                                ArquivaLista();
 
                             }
                         });
@@ -178,13 +184,196 @@ public class Tela_Principal extends AppCompatActivity {
                         return false;
                     }
                 });
-                ReindexaLista();
+
+                refresh_new_list.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+
+                        RetomaLista();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ReindexaLista();
+                                refresh_new_list.setRefreshing(false);
+
+                            }
+                        },1500);
+
+                    }
+                });
+                EscondeFundo();
+
             }
         },500);
 
     }
 
-    public void SalvaLista(){
+    public void ArquivaLista(){
+
+         alerta_salvar_lista = new  AlertDialog.Builder(this).setView(R.layout.dialog_save_list).show();
+
+         EditText nome = alerta_salvar_lista.findViewById(R.id.edit_text_name);
+
+         alerta_salvar_lista.findViewById(R.id.button_confirm).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                String lista_nome = nome.getText().toString();
+                if(lista_nome.trim().isEmpty()){
+                    Toast(ERROR,"Insira um nome...");
+                }
+                else{
+
+                    AdicionaLista(lista_nome);
+
+                }
+             }
+         });
+
+         alerta_salvar_lista.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                alerta_salvar_lista.hide();
+
+            }
+         });
+
+    }
+
+    private void AdicionaLista(String lista_nome){
+
+        List<String> nomes = new LinkedList<>();
+        List<Listas> archived = new LinkedList<>();
+        IniciaCarregamento();
+        alerta_salvar_lista.hide();
+
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DocumentReference doc = db.collection("ARCHIVED_LIST").document(userID);
+        if(doc.equals(null)){
+            InsereLista(archived, lista_nome);
+        }
+        else {
+
+            doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+
+                        DocumentSnapshot value = task.getResult();
+
+                        Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
+
+                        ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
+                        Log.d("value", "251 - " + ret.toString());
+                        for (int i = 0; i < ret.size(); i++) {
+
+                            HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
+                            Log.d("value", "255 - " + item.toString());
+                            nomes.add(item.get("nome").toString());
+                            String nome_lista = item.get("nome").toString();
+                            List<Item> lista = new LinkedList<>();
+                            List<HashMap<String, String>> nodes = (List<HashMap<String, String>>) item.get("itens");
+                            for (int j = 0; j < nodes.size(); j++) {
+
+                                HashMap<String, String> node = nodes.get(j);
+                                Log.d("value", "262 - " + item.toString());
+                                Item a = new Item();
+                                a.setObs(node.get("obs"));
+                                a.setProduto(node.get("produto"));
+                                a.setQtd(node.get("qtd"));
+                                lista.add(a);
+
+                            }
+                            archived.add(new Listas(nome_lista, lista));
+
+                        }
+
+                        Log.d("db", "271 - Sucesso ao salvar dados da lista do usuario " + userID);
+
+
+                        if (nomes.contains(lista_nome)) {
+                            TerminaCarregamento();
+                            alerta_salvar_lista.show();
+                            Toast(ERROR, "Já existe uma lista com esse nome");
+                            Log.d("db", "271 - Já existe uma lista com esse nome " + userID);
+                        } else {
+                            InsereLista(archived, lista_nome);
+                        }
+
+                    }
+                    else{
+
+                        Log.d("ERROR DOC", "244 - Listen failed");
+                        TerminaCarregamento();
+                        alerta_salvar_lista.show();
+                        Toast(ERROR,"Erro ao salvar lista");
+
+                    }
+                }
+            });
+
+        }
+    }
+
+    public void InsereLista(List<Listas> archived, String lista_nome){
+        archived.add(new Listas(lista_nome,itens));
+        List<Map<String,Object>> add = new LinkedList<>();
+
+        for (int i=0;i<archived.size();i++){
+
+            Listas a = archived.get(i);
+
+            Map<String,Object> lista = new HashMap<>();
+            lista.put("nome",a.getNome());
+
+            List<Map<String,String>> itens = new LinkedList<>();
+            for (int j=0;j<a.itens.size();j++){
+
+                Map<String,String> b = new HashMap<>();
+                Item c = a.itens.get(j);
+                b.put("produto",c.getProduto());
+                b.put("qtd",c.getQtd());
+                b.put("obs",c.getObs());
+                itens.add(b);
+
+            }
+            lista.put("itens",itens);
+            add.add(lista);
+        }
+
+
+        Map<String,Object> item = new HashMap<>();
+        item.put("LISTAS",add);
+
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DocumentReference doc = db.collection("ARCHIVED_LIST").document(userID);
+        doc.set(item).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("db","306 - Sucesso ao salvar dados da lista "+lista_nome+" do usuario "+userID);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        TerminaCarregamento();
+                        DeletaLista();
+                        alerta_salvar_lista.hide();
+                        Toast(SUCCESS,"Lista "+lista_nome+" salva com sucesso");
+                    }
+                },500);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("db", "311 - Erro ao salvar dados da lista "+lista_nome+" do usuario " + userID +" "+ e.toString());
+                TerminaCarregamento();
+                alerta_salvar_lista.show();
+                Toast(ERROR,"Erro ao salvar lista");
+            }
+        });
+
 
     }
 
@@ -197,9 +386,12 @@ public class Tela_Principal extends AppCompatActivity {
     }
 
     public void ReindexaLista(){
+
         adapter.update(itens);
-        if(itens.isEmpty()==false){
+        if (itens.isEmpty() == false) {
             findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
+        }else {
+            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.VISIBLE);
         }
 
     }
@@ -213,7 +405,6 @@ public class Tela_Principal extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(Tela_Principal.this, FormLogin.class);
                 startActivity(intent);
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -221,38 +412,56 @@ public class Tela_Principal extends AppCompatActivity {
 
     private void buscaInformacoes(){
 
-        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        try {
+            userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            if(userID == null){
+                throw new NullPointerException();
+            }else{
 
-        DocumentReference doc = db.collection("SOCIAL").document(userID);
+                DocumentReference doc = db.collection("SOCIAL").document(userID);
 
-        doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
 
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                if(value != null){
+                        if(value != null) {
+                            if (value.exists()) {
 
-                    account_name.setText(value.get("login").toString());
-                    if(value.get("email")==null || value.get("email")==""){
-                        account_email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                                account_name.setText(value.get("login").toString());
+                                if (value.get("email") == null || value.get("email") == "") {
+                                    account_email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                                } else {
+                                    account_email.setText(value.get("email").toString());
+                                }
+
+                            }
+                        }
+
                     }
-                    else {
-                        account_email.setText(value.get("email").toString());
-                    }
-
-                }
+                });
 
             }
-        });
+        }
+        catch (Exception e ){
+            Log.d("383 - buscaInformacoes",e.getMessage().toString());
+        }
 
     }
 
 
+    public void IniciaCarregamento(){
 
-    @Override
-    protected void onStart() {
-        CarregaComponenetes();
-        super.onStart();
+        ProgressBar bar = (ProgressBar)findViewById(R.id.progress_bar_total);
+        bar.setVisibility(View.VISIBLE);
+
+    }
+
+    public void TerminaCarregamento(){
+
+        ProgressBar bar = (ProgressBar)findViewById(R.id.progress_bar_total);
+        bar.setVisibility(View.INVISIBLE);
+
     }
 
     private void CarregaComponenetes(){
@@ -261,11 +470,23 @@ public class Tela_Principal extends AppCompatActivity {
         View header = nav.getHeaderView(0);
         account_name = (TextView)header.findViewById(R.id.account_name);
         account_email = (TextView)header.findViewById(R.id.account_email);
+        refresh_new_list = (SwipeRefreshLayout)findViewById(R.id.app_bar_tela_principal).findViewById(R.id.refresh_new_list);
+        IniciaCarregamento();
+
         buscaInformacoes();
 
         ConfiguraLista();
 
-        //RetomaLista();
+        RetomaLista();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ReindexaLista();
+
+                TerminaCarregamento();
+            }
+        },1500);
 
         nav.getMenu().findItem(R.id.nav_new_list_fragment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -280,25 +501,65 @@ public class Tela_Principal extends AppCompatActivity {
 
     public void RetomaLista(){
 
-        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        DocumentReference doc = db.collection("CURRENT_LIST").document(userID);
-
-        doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+            public void run() {
 
-                if(value != null ){
+                userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    itens = (List<NewListAdapter.Item>)value.get("ITENS");
-                    Log.d("db","Sucesso ao salvar dados da atual lista do usuario "+userID);
-                    ReindexaLista();
+                DocumentReference doc = db.collection("CURRENT_LIST").document(userID);
 
-                }
+                doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        if(value != null) {
+                            if (value.exists()) {
+
+                                itens.clear();
+
+                                Log.d("value", "455 - " + value.get("ITENS").getClass().toString());
+                                //findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.VISIBLE);
+
+                                ArrayList<HashMap<String, String>> ret = (ArrayList<HashMap<String, String>>) value.get("ITENS");
+                                Log.d("value", "460 - " + ret.toString());
+                                for (int i = 0; i < ret.size(); i++) {
+                                    Log.d("value", "460 - " + ret.get(i).toString());
+                                    HashMap<String, String> item = (HashMap<String, String>) ret.get(i);
+                                    Log.d("value", "464 - " + item.toString());
+                                    Item a = new Item();
+                                    a.setObs(item.get("obs").toString());
+                                    a.setProduto(item.get("produto").toString());
+                                    a.setQtd(item.get("qtd").toString());
+                                    itens.add(a);
+                                    counter++;
+                                    //findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
+
+                                    //itens.add(new Item(item.getProduto().toString(),item.getQtd().toString(),item.getObs().toString()));
+                                }
+                                Log.d("db", "475 - Sucesso ao retornar dados da atual lista do usuario " + userID);
+                            }
+                        }
+
+                    }
+
+                });
+
+                EscondeFundo();
 
             }
-        });
+        },500);
+
+
+    }
+
+    public void EscondeFundo(){
+
+        if (itens.isEmpty() == false) {
+            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
+        }else {
+            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.VISIBLE);
+        }
 
     }
 

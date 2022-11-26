@@ -1,5 +1,8 @@
 package com.example.projetobase;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -10,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,8 +24,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -106,15 +115,27 @@ public class NewListAdapter extends RecyclerView.Adapter<NewList> {
     public void update(List<Item> mDataset){
         this.itens = mDataset;
         notifyDataSetChanged();
-
         SalvaLista();
 
     }
 
     public void SalvaLista(){
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String,Object> item = new HashMap<>();
-        item.put("ITENS",itens);
+        Log.d("ITENS","125 - "+itens.toString());
+
+        ArrayList<HashMap<String,String>> inner = new ArrayList<>();
+        Log.d("value","460 - "+inner.toString());
+        for(int i=0;i<itens.size();i++){
+
+            HashMap<String,String> b = new HashMap<>();
+            b.put("obs", itens.get(i).getObs().toString());
+            b.put("produto",itens.get(i).getProduto().toString());
+            b.put("qtd",itens.get(i).getQtd().toString());
+            inner.add(b);
+        }
+        item.put("ITENS",inner);
 
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -122,12 +143,12 @@ public class NewListAdapter extends RecyclerView.Adapter<NewList> {
         doc.set(item).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Log.d("db","Sucesso ao salvar dados da atual lista do usuario "+userID);
+                Log.d("db","133 - Sucesso ao salvar dados da atual lista do usuario "+userID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("db", "Erro ao salvar dados da atual lista do usuario " + userID +" "+ e.toString());
+                Log.d("db", "138 - Erro ao salvar dados da atual lista do usuario " + userID +" "+ e.toString());
             }
         });
     }

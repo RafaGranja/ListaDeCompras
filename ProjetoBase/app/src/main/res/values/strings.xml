@@ -26,6 +26,10 @@
     <string name="Produto">Produto</string>
     <string name="Quantidade">Quant.</string>
     <string name="Observacoes">Observações</string>
+    <string name="SalvarLista">Dê um nome para sua lista</string>
+    <string name="Nome">Nome</string>
+    <string name="Confirmar">Confirmar</string>
+    <string name="Cancelar">Cancelar</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>

@@ -38,6 +38,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="cornerRadius">10dp</item>
     </style>
 
 </resources>

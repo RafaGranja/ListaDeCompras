@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.OAuthCredential;
 
 
 public class FormLogin extends AppCompatActivity {
@@ -154,25 +150,30 @@ public class FormLogin extends AppCompatActivity {
 
     }
 
-    private void TelaPrincipal(){
+    private void IniciarTelaPrincipal(){
+        Log.d("TelaPrincipal","TelaPrincipal");
         Intent intent = new Intent(FormLogin.this,Tela_Principal.class);
+        Log.d("TelaPrincipal","TelaPrincipal");
         startActivity(intent);
         finish();
     }
 
     @Override
     protected void onStart() {
-        super.onStart();
-        FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+         super.onStart();
+         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+         if(current_user != null){
 
-        if(current_user!=null){
-            if(current_user.isEmailVerified()) {
-                TelaPrincipal();
-            }
-            else{
-                Toast(WARNING,"Verifique seu email antes de prosseguir");
-            }
-        }
+             Log.d("Firebase_user",current_user.toString());
+             if(current_user.isEmailVerified()) {
+                 Log.d("Firebase_user",current_user.toString());
+                 IniciarTelaPrincipal();
+             }
+             else{
+                 Toast(WARNING,"Verifique seu email antes de prosseguir");
+             }
+
+         }
     }
 
     private void LogaUsuario(){
@@ -188,7 +189,7 @@ public class FormLogin extends AppCompatActivity {
                 text_signup.setClickable(true);
                 text_passwordchange.setClickable(true);
                 load.setVisibility(View.INVISIBLE);
-                TelaPrincipal();
+                IniciarTelaPrincipal();
             }
         },2000);
     }

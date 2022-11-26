@@ -4,9 +4,11 @@
     package="com.example.projetobase">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_celular"
@@ -20,11 +22,6 @@
             android:exported="false" />
         <activity
             android:name=".Tela_Principal"
-            android:exported="false"
-            android:label="@string/title_activity_tela_principal"
-            android:theme="@style/Theme.ProjetoBase.NoActionBar" />
-        <activity
-            android:name=".activity_tela_principal"
             android:exported="false"
             android:label="@string/title_activity_tela_principal"
             android:theme="@style/Theme.ProjetoBase.NoActionBar" />
