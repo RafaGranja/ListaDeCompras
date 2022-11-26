@@ -1,4 +1,4 @@
 # StartUp
-Página Web para dar início ao App de ajuda social
+App de lista de compras voltado para Analitycs
 ## Objetivos
-Facilitar o dia-a-dia de pessoas que tem parentes ou próximos, portadores de necessidades especiais.
+Facilitar a construção de lista de compras e partir destas a análise financeira dos usuários 
