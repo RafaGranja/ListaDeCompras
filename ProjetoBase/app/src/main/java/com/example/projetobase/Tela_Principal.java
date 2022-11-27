@@ -50,9 +50,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class Tela_Principal extends AppCompatActivity {
@@ -65,12 +69,15 @@ public class Tela_Principal extends AppCompatActivity {
     private TextView account_email;
 
     public List<Item> itens;
+    public List<ArchivedListAdapter.Archived> itens_archived;
     public NewListAdapter adapter;
+    public ArchivedListAdapter adapter_archived;
     public int counter=0;
     public FloatingActionButton ButtonAdiconarCard;
     public FloatingActionButton ButtonDeletarLista;
     public FloatingActionButton ButtonSalvarLista;
     public SwipeRefreshLayout refresh_new_list;
+    public SwipeRefreshLayout refresh_archived_list;
     public AlertDialog alerta_salvar_lista;
 
     //private int logout;
@@ -86,6 +93,7 @@ public class Tela_Principal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         itens = new LinkedList<>();
+        itens_archived = new LinkedList<>();
         binding = ActivityTelaPrincipalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -209,6 +217,47 @@ public class Tela_Principal extends AppCompatActivity {
 
     }
 
+    public void ConfiguraListaArchived(){
+        new Handler().postDelayed(new Runnable() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public void run() {
+
+                Log.d("ConfiguraListaArchived","119 - Vou configurar lista");
+                RecyclerView recycle = findViewById(R.id.archived_list);
+                recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                adapter_archived = new ArchivedListAdapter(itens_archived);
+                recycle.setAdapter(adapter_archived);
+                refresh_archived_list = (SwipeRefreshLayout)findViewById(R.id.app_bar_tela_principal).findViewById(R.id.refresh_archived_list);
+
+                refresh_archived_list.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+
+                        RetomaListaArchived();
+                        refresh_archived_list.setRefreshing(false);
+
+
+                    }
+                });
+
+                EscondeFundoArchived();
+
+            }
+        },500);
+
+    }
+
+    public void EscondeFundoArchived(){
+
+        if (itens_archived.isEmpty() == false) {
+            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_archive_list).setVisibility(View.INVISIBLE);
+        }else {
+            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_archive_list).setVisibility(View.VISIBLE);
+        }
+
+    }
+
     public void ArquivaLista(){
 
          alerta_salvar_lista = new  AlertDialog.Builder(this).setView(R.layout.dialog_save_list).show();
@@ -300,6 +349,8 @@ public class Tela_Principal extends AppCompatActivity {
                             Log.d("db", "271 - Já existe uma lista com esse nome " + userID);
                         } else {
                             InsereLista(archived, lista_nome);
+                            itens.clear();
+                            ReindexaLista();
                         }
 
                     }
@@ -388,11 +439,7 @@ public class Tela_Principal extends AppCompatActivity {
     public void ReindexaLista(){
 
         adapter.update(itens);
-        if (itens.isEmpty() == false) {
-            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
-        }else {
-            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.VISIBLE);
-        }
+        EscondeFundo();
 
     }
 
@@ -471,6 +518,7 @@ public class Tela_Principal extends AppCompatActivity {
         account_name = (TextView)header.findViewById(R.id.account_name);
         account_email = (TextView)header.findViewById(R.id.account_email);
         refresh_new_list = (SwipeRefreshLayout)findViewById(R.id.app_bar_tela_principal).findViewById(R.id.refresh_new_list);
+
         IniciaCarregamento();
 
         buscaInformacoes();
@@ -496,7 +544,75 @@ public class Tela_Principal extends AppCompatActivity {
             }
         });
 
+        nav.getMenu().findItem(R.id.nav_archive_list_fragment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                IniciaCarregamento();
+                ConfiguraListaArchived();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        RetomaListaArchived();
+                        TerminaCarregamento();
+                    }
+                },500);
+                return false;
+            }
+        });
 
+
+    }
+
+    public void RetomaListaArchived(){
+
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        itens_archived.clear();
+        ReindexaListaArchived();
+
+        DocumentReference doc = db.collection("ARCHIVED_LIST").document(userID);
+        if(!doc.equals(null)){
+
+            doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+
+                        DocumentSnapshot value = task.getResult();
+
+                        Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
+
+                        ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
+                        Log.d("value", "251 - " + ret.toString());
+                        for (int i = 0; i < ret.size(); i++) {
+
+                            HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
+                            Log.d("value", "255 - " + item.toString());
+                            itens_archived.add(new ArchivedListAdapter.Archived(item.get("nome").toString()));
+                            adapter_archived.notifyItemInserted(0);
+
+                        }
+
+                        Log.d("db", "271 - Sucesso ao salvar dados da lista do usuario " + userID);
+
+                        EscondeFundoArchived();
+                    }
+                    else{
+
+                        Log.d("ERROR DOC", "244 - Listen failed");
+                        Toast(ERROR,"Erro ao recuperar lista");
+
+                    }
+                }
+            });
+
+        }
+
+    }
+
+    public void ReindexaListaArchived(){
+
+        adapter_archived.update(itens_archived);
+        EscondeFundoArchived();
     }
 
     public void RetomaLista(){
