@@ -15,7 +15,7 @@
             android:id="@+id/archived_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"/>
 
         <TextView
             android:id="@+id/text_archive_list"
@@ -42,4 +42,6 @@
             app:srcCompat="@android:drawable/ic_input_add"
             tools:ignore="MissingConstraints" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

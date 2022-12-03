@@ -8,7 +8,6 @@
 
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_celular"
@@ -16,7 +15,11 @@
         android:roundIcon="@mipmap/ic_celular_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjetoBase"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".EditList"
+            android:exported="false" />
         <activity
             android:name=".RecuperarSenha"
             android:exported="false" />

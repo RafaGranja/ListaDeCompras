@@ -52,6 +52,7 @@
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/sucess_toast_ic.xml" value="0.1" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/warning_toast.xml" value="0.1" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/drawable/warning_toast_ic.xml" value="0.1265" />
+        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_edit_list.xml" value="0.18" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_form_cadastro.xml" value="0.22" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_form_login.xml" value="0.22" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_main.xml" value="0.27291666666666664" />
@@ -59,14 +60,15 @@
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_tela_principal.xml" value="0.1" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/activity_tela_principal2.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/app_bar_tela_principal.xml" value="0.27291666666666664" />
-        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/archived_item_list.xml" value="0.2046875" />
+        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/archived_item_list.xml" value="0.1" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/content_activity_tela_principal.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/content_tela_principal.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/custom_toast.xml" value="0.1" />
+        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/dialog_edit_list.xml" value="0.14578879863189398" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/dialog_save_list.xml" value="0.22" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/fragment_account.xml" value="0.1" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/fragment_analytics.xml" value="0.22402736212056434" />
-        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/fragment_archive_list.xml" value="0.22402736212056434" />
+        <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/fragment_archive_list.xml" value="0.18" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/fragment_gallery.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/fragment_home.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/Rafael Granja/OneDrive - Universidade Federal de Minas Gerais/AndroidStudioProjects/ProjetoBase/app/src/main/res/layout/fragment_new_list.xml" value="0.22" />

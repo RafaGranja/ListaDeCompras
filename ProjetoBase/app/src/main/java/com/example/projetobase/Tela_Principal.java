@@ -5,6 +5,7 @@ import static com.example.projetobase.NewListAdapter.*;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.projetobase.databinding.FragmentAccountBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,8 +81,7 @@ public class Tela_Principal extends AppCompatActivity {
     public SwipeRefreshLayout refresh_new_list;
     public SwipeRefreshLayout refresh_archived_list;
     public AlertDialog alerta_salvar_lista;
-
-    //private int logout;
+    public NavController navController;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userID;
@@ -92,8 +93,6 @@ public class Tela_Principal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        itens = new LinkedList<>();
-        itens_archived = new LinkedList<>();
         binding = ActivityTelaPrincipalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -110,11 +109,12 @@ public class Tela_Principal extends AppCompatActivity {
                 .setOpenableLayout(drawer)
                 .build();
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_tela_principal);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_tela_principal);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        CarregaComponenetes();
+
+        CarregaComponenetes(getIntent().getExtras());
 
     }
 
@@ -127,7 +127,7 @@ public class Tela_Principal extends AppCompatActivity {
                 Log.d("ConfiguraLista","119 - Vou configurar lista");
                 RecyclerView recycle = findViewById(R.id.item_list);
                 recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                adapter = new NewListAdapter(itens);
+                adapter = new NewListAdapter(itens,true);
                 recycle.setAdapter(adapter);
                 ButtonSalvarLista = findViewById(R.id.app_bar_tela_principal).findViewById(R.id.fab_save_list);
                 ButtonDeletarLista = findViewById(R.id.app_bar_tela_principal).findViewById(R.id.fab_delete_list);
@@ -193,6 +193,8 @@ public class Tela_Principal extends AppCompatActivity {
                     }
                 });
 
+                refresh_new_list = (SwipeRefreshLayout)findViewById(R.id.app_bar_tela_principal).findViewById(R.id.refresh_new_list);
+
                 refresh_new_list.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
@@ -206,18 +208,21 @@ public class Tela_Principal extends AppCompatActivity {
                                 refresh_new_list.setRefreshing(false);
 
                             }
-                        },1500);
+                        },100);
 
                     }
                 });
                 EscondeFundo();
 
             }
-        },500);
+        },1000);
 
     }
 
     public void ConfiguraListaArchived(){
+
+        Context context = this;
+        Context context1 = getApplicationContext();
         new Handler().postDelayed(new Runnable() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -225,8 +230,8 @@ public class Tela_Principal extends AppCompatActivity {
 
                 Log.d("ConfiguraListaArchived","119 - Vou configurar lista");
                 RecyclerView recycle = findViewById(R.id.archived_list);
-                recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                adapter_archived = new ArchivedListAdapter(itens_archived);
+                recycle.setLayoutManager(new LinearLayoutManager(context1));
+                adapter_archived = new ArchivedListAdapter(itens_archived,context1,context);
                 recycle.setAdapter(adapter_archived);
                 refresh_archived_list = (SwipeRefreshLayout)findViewById(R.id.app_bar_tela_principal).findViewById(R.id.refresh_archived_list);
 
@@ -236,7 +241,6 @@ public class Tela_Principal extends AppCompatActivity {
 
                         RetomaListaArchived();
                         refresh_archived_list.setRefreshing(false);
-
 
                     }
                 });
@@ -413,7 +417,7 @@ public class Tela_Principal extends AppCompatActivity {
                         alerta_salvar_lista.hide();
                         Toast(SUCCESS,"Lista "+lista_nome+" salva com sucesso");
                     }
-                },500);
+                },100);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -511,35 +515,73 @@ public class Tela_Principal extends AppCompatActivity {
 
     }
 
-    private void CarregaComponenetes(){
+    private void CarregaComponenetes(Bundle intent){
 
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
         View header = nav.getHeaderView(0);
         account_name = (TextView)header.findViewById(R.id.account_name);
         account_email = (TextView)header.findViewById(R.id.account_email);
         refresh_new_list = (SwipeRefreshLayout)findViewById(R.id.app_bar_tela_principal).findViewById(R.id.refresh_new_list);
+        refresh_archived_list = (SwipeRefreshLayout)findViewById(R.id.app_bar_tela_principal).findViewById(R.id.refresh_archived_list);
+
+        itens = new LinkedList<>();
+        itens_archived = new LinkedList<>();
 
         IniciaCarregamento();
 
         buscaInformacoes();
 
-        ConfiguraLista();
+        if(intent != null) {
+            if (intent.get("fragment").toString().equals("archived")) {
+                navController.popBackStack();
+                navController.navigate(R.id.nav_archive_list_fragment);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
-        RetomaLista();
+                        FragmentArchived();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ReindexaLista();
+                    }
+                },100);
 
-                TerminaCarregamento();
             }
-        },1500);
+            else{
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        FragmentNewList();
+
+                    }
+                },100);
+
+
+            }
+        }
+        else{
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    FragmentNewList();
+
+                }
+            },100);
+        }
 
         nav.getMenu().findItem(R.id.nav_new_list_fragment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                ConfiguraLista();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        FragmentNewList();
+
+                    }
+                },100);
                 return false;
             }
         });
@@ -547,20 +589,42 @@ public class Tela_Principal extends AppCompatActivity {
         nav.getMenu().findItem(R.id.nav_archive_list_fragment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                IniciaCarregamento();
-                ConfiguraListaArchived();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        RetomaListaArchived();
-                        TerminaCarregamento();
+
+                        FragmentArchived();
+
                     }
-                },500);
+                },100);
                 return false;
             }
         });
 
 
+    }
+
+    public void FragmentNewList(){
+        IniciaCarregamento();
+        ConfiguraLista();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                RetomaLista();
+            }
+        },500);
+
+    }
+
+    public void FragmentArchived(){
+        IniciaCarregamento();
+        ConfiguraListaArchived();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                RetomaListaArchived();
+            }
+        },500);
     }
 
     public void RetomaListaArchived(){
@@ -595,6 +659,7 @@ public class Tela_Principal extends AppCompatActivity {
                         Log.d("db", "271 - Sucesso ao salvar dados da lista do usuario " + userID);
 
                         EscondeFundoArchived();
+                        TerminaCarregamento();
                     }
                     else{
 
@@ -615,7 +680,7 @@ public class Tela_Principal extends AppCompatActivity {
         EscondeFundoArchived();
     }
 
-    public void RetomaLista(){
+    public void  RetomaLista(){
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -653,6 +718,10 @@ public class Tela_Principal extends AppCompatActivity {
 
                                     //itens.add(new Item(item.getProduto().toString(),item.getQtd().toString(),item.getObs().toString()));
                                 }
+
+                                ReindexaLista();
+                                EscondeFundo();
+                                TerminaCarregamento();
                                 Log.d("db", "475 - Sucesso ao retornar dados da atual lista do usuario " + userID);
                             }
                         }
@@ -660,8 +729,6 @@ public class Tela_Principal extends AppCompatActivity {
                     }
 
                 });
-
-                EscondeFundo();
 
             }
         },500);
@@ -671,10 +738,19 @@ public class Tela_Principal extends AppCompatActivity {
 
     public void EscondeFundo(){
 
-        if (itens.isEmpty() == false) {
-            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
-        }else {
-            findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.VISIBLE);
+        if(itens!=null){
+
+            if (itens.isEmpty() == false) {
+
+                if(findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list)!=null){
+                    findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.INVISIBLE);
+                }
+            }else {
+                if(findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list)!=null){
+                    findViewById(R.id.app_bar_tela_principal).findViewById(R.id.text_new_list).setVisibility(View.VISIBLE);
+                }
+            }
+
         }
 
     }

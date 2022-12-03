@@ -263,7 +263,7 @@ public class FormCadastro extends AppCompatActivity {
                 EnviaEmail();
                 FirebaseAuth.getInstance().signOut();
             }
-        },2000);
+        },100);
     }
 
     private void ErroCadastro(int Type,String Erro){
@@ -278,7 +278,7 @@ public class FormCadastro extends AppCompatActivity {
                 button_sign_up.setClickable(true);
                 load.setVisibility(View.INVISIBLE);
             }
-        },1000);
+        },100);
     }
 
     private void IniciarComponentes(){

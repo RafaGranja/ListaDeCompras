@@ -84,9 +84,11 @@ public class NewListAdapter extends RecyclerView.Adapter<NewList> {
     }
 
     List<Item> itens;
+    boolean met;
 
-    public NewListAdapter(List<Item> itens){
+    public NewListAdapter(List<Item> itens,boolean _met){
         this.itens=itens;
+        this.met=_met;
     }
 
     @NonNull
@@ -115,9 +117,12 @@ public class NewListAdapter extends RecyclerView.Adapter<NewList> {
     public void update(List<Item> mDataset){
         this.itens = mDataset;
         notifyDataSetChanged();
-        SalvaLista();
+        if(met==true){
+            SalvaLista();
+        }
 
     }
+
 
     public void SalvaLista(){
 
@@ -152,6 +157,7 @@ public class NewListAdapter extends RecyclerView.Adapter<NewList> {
             }
         });
     }
+
 
 }
 

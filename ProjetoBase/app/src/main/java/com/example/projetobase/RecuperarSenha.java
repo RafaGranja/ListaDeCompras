@@ -69,7 +69,7 @@ public class RecuperarSenha extends AppCompatActivity {
                                         Intent intent = new Intent(RecuperarSenha.this,FormLogin.class);
                                         startActivity(intent);
                                     }
-                                },1000);
+                                },100);
                             }
                             else{
                                 try {

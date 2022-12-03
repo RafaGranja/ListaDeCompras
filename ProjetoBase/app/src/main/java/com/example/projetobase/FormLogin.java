@@ -191,7 +191,7 @@ public class FormLogin extends AppCompatActivity {
                 load.setVisibility(View.INVISIBLE);
                 IniciarTelaPrincipal();
             }
-        },2000);
+        },100);
     }
 
     private void ErroLogin(int Type, String Erro){
@@ -207,7 +207,7 @@ public class FormLogin extends AppCompatActivity {
                 text_passwordchange.setClickable(true);
                 load.setVisibility(View.INVISIBLE);
             }
-        },1000);
+        },100);
 
     }
 

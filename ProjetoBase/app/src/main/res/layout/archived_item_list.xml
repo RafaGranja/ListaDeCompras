@@ -15,6 +15,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:id="@+id/layout"
         android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,7 +24,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_dialog_info"
+            app:srcCompat="@android:drawable/ic_menu_search"
             tools:ignore="MissingConstraints"
             android:layout_marginLeft="40dp"/>
 
