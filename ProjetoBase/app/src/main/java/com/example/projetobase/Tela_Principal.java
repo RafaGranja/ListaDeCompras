@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -51,6 +53,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -269,6 +272,7 @@ public class Tela_Principal extends AppCompatActivity {
          EditText nome = alerta_salvar_lista.findViewById(R.id.edit_text_name);
 
          alerta_salvar_lista.findViewById(R.id.button_confirm).setOnClickListener(new View.OnClickListener() {
+             @RequiresApi(api = Build.VERSION_CODES.O)
              @Override
              public void onClick(View view) {
                 String lista_nome = nome.getText().toString();
@@ -294,6 +298,7 @@ public class Tela_Principal extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void AdicionaLista(String lista_nome){
 
         List<String> nomes = new LinkedList<>();
@@ -310,41 +315,47 @@ public class Tela_Principal extends AppCompatActivity {
         else {
 
             doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
 
                         DocumentSnapshot value = task.getResult();
 
-                        Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
+                        if(value.get("LISTAS")!=null){
 
-                        ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
-                        Log.d("value", "251 - " + ret.toString());
-                        for (int i = 0; i < ret.size(); i++) {
+                            Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
 
-                            HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
-                            Log.d("value", "255 - " + item.toString());
-                            nomes.add(item.get("nome").toString());
-                            String nome_lista = item.get("nome").toString();
-                            List<Item> lista = new LinkedList<>();
-                            List<HashMap<String, String>> nodes = (List<HashMap<String, String>>) item.get("itens");
-                            for (int j = 0; j < nodes.size(); j++) {
+                            ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
+                            Log.d("value", "251 - " + ret.toString());
+                            for (int i = 0; i < ret.size(); i++) {
 
-                                HashMap<String, String> node = nodes.get(j);
-                                Log.d("value", "262 - " + item.toString());
-                                Item a = new Item();
-                                a.setObs(node.get("obs"));
-                                a.setProduto(node.get("produto"));
-                                a.setQtd(node.get("qtd"));
-                                lista.add(a);
+                                HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
+                                Log.d("value", "255 - " + item.toString());
+                                nomes.add(item.get("nome").toString());
+                                String nome_lista = item.get("nome").toString();
+                                String[] data = item.get("datacriacao").toString().split("-");
+                                LocalDate datacriacao = LocalDate.of(Integer.valueOf(data[0]),Integer.valueOf(data[1]),Integer.valueOf(data[2]));
+                                List<Item> lista = new LinkedList<>();
+                                List<HashMap<String, String>> nodes = (List<HashMap<String, String>>) item.get("itens");
+                                for (int j = 0; j < nodes.size(); j++) {
+
+                                    HashMap<String, String> node = nodes.get(j);
+                                    Log.d("value", "262 - " + item.toString());
+                                    Item a = new Item();
+                                    a.setObs(node.get("obs"));
+                                    a.setProduto(node.get("produto"));
+                                    a.setQtd(node.get("qtd"));
+                                    lista.add(a);
+
+                                }
+                                archived.add(new Listas(nome_lista, lista,datacriacao));
 
                             }
-                            archived.add(new Listas(nome_lista, lista));
+
+                            Log.d("db", "271 - Sucesso ao salvar dados da lista do usuario " + userID);
 
                         }
-
-                        Log.d("db", "271 - Sucesso ao salvar dados da lista do usuario " + userID);
-
 
                         if (nomes.contains(lista_nome)) {
                             TerminaCarregamento();
@@ -372,6 +383,7 @@ public class Tela_Principal extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void InsereLista(List<Listas> archived, String lista_nome){
         archived.add(new Listas(lista_nome,itens));
         List<Map<String,Object>> add = new LinkedList<>();
@@ -382,6 +394,7 @@ public class Tela_Principal extends AppCompatActivity {
 
             Map<String,Object> lista = new HashMap<>();
             lista.put("nome",a.getNome());
+            lista.put("datacriacao",a.getData());
 
             List<Map<String,String>> itens = new LinkedList<>();
             for (int j=0;j<a.itens.size();j++){
@@ -617,6 +630,7 @@ public class Tela_Principal extends AppCompatActivity {
     }
 
     public void FragmentArchived(){
+
         IniciaCarregamento();
         ConfiguraListaArchived();
         new Handler().postDelayed(new Runnable() {
@@ -624,7 +638,8 @@ public class Tela_Principal extends AppCompatActivity {
             public void run() {
                 RetomaListaArchived();
             }
-        },500);
+        },1000);
+
     }
 
     public void RetomaListaArchived(){
@@ -637,27 +652,31 @@ public class Tela_Principal extends AppCompatActivity {
         if(!doc.equals(null)){
 
             doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
 
                         DocumentSnapshot value = task.getResult();
+                        if(value.get("LISTAS")!=null){
 
-                        Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
+                            Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
 
-                        ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
-                        Log.d("value", "251 - " + ret.toString());
-                        for (int i = 0; i < ret.size(); i++) {
+                            ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
+                            Log.d("value", "251 - " + ret.toString());
 
-                            HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
-                            Log.d("value", "255 - " + item.toString());
-                            itens_archived.add(new ArchivedListAdapter.Archived(item.get("nome").toString()));
-                            adapter_archived.notifyItemInserted(0);
+                            for (int i = 0; i < ret.size(); i++) {
+
+                                HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
+                                Log.d("value", "255 - " + item.toString());
+                                itens_archived.add(new ArchivedListAdapter.Archived(item.get("nome").toString(),item.get("datacriacao").toString()));
+                                adapter_archived.notifyItemInserted(0);
+
+                            }
+
+                            Log.d("db", "271 - Sucesso ao salvar dados da lista do usuario " + userID);
 
                         }
-
-                        Log.d("db", "271 - Sucesso ao salvar dados da lista do usuario " + userID);
-
                         EscondeFundoArchived();
                         TerminaCarregamento();
                     }

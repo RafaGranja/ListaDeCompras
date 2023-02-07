@@ -43,7 +43,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,9 +71,29 @@ public class ArchivedListAdapter extends RecyclerView.Adapter<ArchivedList> {
     public static class Archived{
 
         String nome;
+        LocalDate data;
+
+        SimpleDateFormat formatter;
 
         Archived(String _nome){
+
             this.nome  =_nome;
+            this.formatter = new SimpleDateFormat("dd/MM/yyyy");
+            formatter.setLenient (false);
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        Archived(String _nome, String _data){
+
+            this.nome  =_nome;
+            this.formatter = new SimpleDateFormat("dd/MM/yyyy");
+            formatter.setLenient (false);
+            this.data= LocalDate.of(Integer.valueOf(_data.split("-")[0]),
+                                    Integer.valueOf(_data.split("-")[1]),
+                                    Integer.valueOf(_data.split("-")[2]));
+
+
         }
 
         Archived(){
@@ -81,6 +107,13 @@ public class ArchivedListAdapter extends RecyclerView.Adapter<ArchivedList> {
         public void setNome(String _nome){
             this.nome=_nome;
         }
+
+        public String getData(){
+            String ret = this.data.toString();
+            return ret.split("-")[2]+"/"+ret.split("-")[1]+"/"+ret.split("-")[0];
+        }
+
+        public void setData(LocalDate _data){ this.data=_data; }
 
     }
 
@@ -104,6 +137,7 @@ public class ArchivedListAdapter extends RecyclerView.Adapter<ArchivedList> {
     public void onBindViewHolder(@NonNull ArchivedList holder, int position) {
 
         holder.nome.setText(itens.get(position).getNome());
+        holder.data.setText(itens.get(position).getData());
 
     }
 
@@ -133,6 +167,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     TextView nome;
+    TextView data;
     FloatingActionButton info;
     RecyclerView recycle;
     NewListAdapter adapter_edit;
@@ -148,6 +183,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
         view = itemView;
         nome = itemView.findViewById(R.id.edit_nome_lista);
         info = itemView.findViewById(R.id.info_archived_list);
+        data = itemView.findViewById(R.id.edit_data_lista);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -282,6 +318,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
         else {
 
             doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
@@ -297,6 +334,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
                             HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
                             Log.d("value", "255 - " + item.toString());
                             String nome_lista = item.get("nome").toString();
+                            LocalDate datacricao = (LocalDate) item.get("datacricao");
                             List<NewListAdapter.Item> lista = new LinkedList<>();
                             List<HashMap<String, String>> nodes = (List<HashMap<String, String>>) item.get("itens");
                             for (int j = 0; j < nodes.size(); j++) {
@@ -311,10 +349,10 @@ class ArchivedList extends RecyclerView.ViewHolder{
 
                             }
                             if(nome_lista.equals(nome_1)){
-                                archived.add(new Listas(nome_2, lista));
+                                archived.add(new Listas(nome_2, lista,datacricao));
                             }
                             else{
-                                archived.add(new Listas(nome_lista, lista));
+                                archived.add(new Listas(nome_lista, lista,datacricao));
                             }
 
 
@@ -348,6 +386,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
 
             Map<String,Object> lista = new HashMap<>();
             lista.put("nome",a.getNome());
+            lista.put("datacriacao",a.getData());
 
             List<Map<String,String>> itens = new LinkedList<>();
             for (int j=0;j<a.itens.size();j++){
@@ -417,6 +456,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
         else {
 
             doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
@@ -432,6 +472,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
                             HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
                             Log.d("value", "255 - " + item.toString());
                             String nome_lista = item.get("nome").toString();
+                            LocalDate datacricao = (LocalDate) item.get("datacricao");
                             if(!nome_lista.equals(_nome)){
 
                                 List<NewListAdapter.Item> lista = new LinkedList<>();
@@ -447,7 +488,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
                                     lista.add(a);
 
                                 }
-                                archived.add(new Listas(nome_lista, lista));
+                                archived.add(new Listas(nome_lista, lista,datacricao));
 
                             }
 

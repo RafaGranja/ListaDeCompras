@@ -33,6 +33,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -211,6 +212,7 @@ public class EditList extends AppCompatActivity {
         else {
 
             doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
@@ -226,25 +228,31 @@ public class EditList extends AppCompatActivity {
                             HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
                             Log.d("value", "255 - " + item.toString());
                             String nome_lista = item.get("nome").toString();
+                            String[] data = item.get("datacriacao").toString().split("-");
+                            LocalDate datacriacao = LocalDate.of(Integer.valueOf(data[0]),Integer.valueOf(data[1]),Integer.valueOf(data[2]));
                             List<NewListAdapter.Item> lista = new LinkedList<>();
                             List<HashMap<String, String>> nodes = (List<HashMap<String, String>>) item.get("itens");
                             if(!nome_lista.equals(nome)){
+
                                 for (int j = 0; j < nodes.size(); j++) {
 
                                     HashMap<String, String> node = nodes.get(j);
                                     Log.d("value", "262 - " + item.toString());
                                     NewListAdapter.Item a = new NewListAdapter.Item();
+
                                     a.setObs(node.get("obs"));
                                     a.setProduto(node.get("produto"));
                                     a.setQtd(node.get("qtd"));
                                     lista.add(a);
 
                                 }
-                                archived.add(new Listas(nome_lista, lista));
+
+                                archived.add(new Listas(nome_lista, lista,datacriacao));
+
                             }
                             else{
 
-                                archived.add(new Listas(nome, itens_edit));
+                                archived.add(new Listas(nome, itens_edit,datacriacao));
 
                             }
 
@@ -281,6 +289,7 @@ public class EditList extends AppCompatActivity {
 
             Map<String,Object> lista = new HashMap<>();
             lista.put("nome",a.getNome());
+            lista.put("datacriacao",a.getData());
 
             List<Map<String,String>> itens = new LinkedList<>();
             for (int j=0;j<a.itens.size();j++){
@@ -378,8 +387,9 @@ public class EditList extends AppCompatActivity {
 
                         Log.d("value", "251 - " + ret.toString());
 
-                        for (int i = 0; i < ret.size(); i++) {
+                        for(int i = 0; i < ret.size(); i++) {
 
+                            Log.d("value", "392 - Laço de repetição" + i);
                             HashMap<String, Object> item = (HashMap<String, Object>)ret.get(i);
                             Log.d("value", "251 - " + item.get("nome"));
                             Log.d("value", "251 - " + nome);
@@ -475,6 +485,7 @@ public class EditList extends AppCompatActivity {
         else {
 
             doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
@@ -490,6 +501,8 @@ public class EditList extends AppCompatActivity {
                             HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
                             Log.d("value", "255 - " + item.toString());
                             String nome_lista = item.get("nome").toString();
+                            String[] data = item.get("datacriacao").toString().split("-");
+                            LocalDate datacriacao = LocalDate.of(Integer.valueOf(data[0]),Integer.valueOf(data[1]),Integer.valueOf(data[2]));
                             List<NewListAdapter.Item> lista = new LinkedList<>();
                             List<HashMap<String, String>> nodes = (List<HashMap<String, String>>) item.get("itens");
                             if(!nome_lista.equals(nome)){
@@ -504,11 +517,11 @@ public class EditList extends AppCompatActivity {
                                     lista.add(a);
 
                                 }
-                                archived.add(new Listas(nome_lista, lista));
+                                archived.add(new Listas(nome_lista, lista,datacriacao));
                             }
                             else{
 
-                                archived.add(new Listas(nome, itens_edit));
+                                archived.add(new Listas(nome, itens_edit,datacriacao));
 
                             }
 
