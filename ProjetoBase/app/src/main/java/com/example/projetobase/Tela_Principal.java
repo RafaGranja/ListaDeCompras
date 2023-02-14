@@ -684,6 +684,7 @@ public class Tela_Principal extends AppCompatActivity {
 
                         Log.d("ERROR DOC", "244 - Listen failed");
                         Toast(ERROR,"Erro ao recuperar lista");
+                        TerminaCarregamento();
 
                     }
                 }

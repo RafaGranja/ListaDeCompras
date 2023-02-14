@@ -163,16 +163,16 @@ public class EditList extends AppCompatActivity {
                     @Override
                     public void onRefresh() {
 
-                        RetomaLista();
+                        //RetomaLista();
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                ReindexaLista();
+                                //ReindexaLista();
                                 refresh.setRefreshing(false);
 
                             }
-                        },500);
+                        },1000);
 
                     }
                 });
@@ -380,35 +380,40 @@ public class EditList extends AppCompatActivity {
                     if(task.isSuccessful()){
 
                         DocumentSnapshot value = task.getResult();
+                        Log.d("value", "248 - " + value);
 
-                        Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
+                        if(value!=null) {
 
-                        ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
+                            Log.d("value", "248 - " + value.get("LISTAS").getClass().toString());
 
-                        Log.d("value", "251 - " + ret.toString());
+                            ArrayList<HashMap<String, Object>> ret = (ArrayList<HashMap<String, Object>>) value.get("LISTAS");
 
-                        for(int i = 0; i < ret.size(); i++) {
+                            Log.d("value", "251 - " + ret.toString());
 
-                            Log.d("value", "392 - Laço de repetição" + i);
-                            HashMap<String, Object> item = (HashMap<String, Object>)ret.get(i);
-                            Log.d("value", "251 - " + item.get("nome"));
-                            Log.d("value", "251 - " + nome);
-                            if(item.get("nome").toString().equals(nome)){
+                            for (int i = 0; i < ret.size(); i++) {
 
-                                Log.d("value", "460 - " + item.get("itens").toString());
+                                Log.d("value", "392 - Laço de repetição" + i);
+                                HashMap<String, Object> item = (HashMap<String, Object>) ret.get(i);
+                                Log.d("value", "251 - " + item.get("nome"));
+                                Log.d("value", "251 - " + nome);
+                                if (item.get("nome").toString().equals(nome)) {
 
-                                ArrayList<HashMap<String, String>> lista = (ArrayList<HashMap<String, String>>)item.get("itens");
+                                    Log.d("value", "460 - " + item.get("itens").toString());
 
-                                for (int j = 0; j < lista.size() ; j++) {
+                                    ArrayList<HashMap<String, String>> lista = (ArrayList<HashMap<String, String>>) item.get("itens");
 
-                                    HashMap<String, String> item2 = (HashMap<String, String>)lista.get(j);
-                                    Log.d("value", "464 - " + item.toString());
-                                    NewListAdapter.Item a = new NewListAdapter.Item();
-                                    a.setObs(item2.get("obs").toString());
-                                    a.setProduto(item2.get("produto").toString());
-                                    a.setQtd(item2.get("qtd").toString());
-                                    itens_edit.add(a);
-                                    adapter.notifyItemInserted(0);
+                                    for (int j = 0; j < lista.size(); j++) {
+
+                                        HashMap<String, String> item2 = (HashMap<String, String>) lista.get(j);
+                                        Log.d("value", "464 - " + item.toString());
+                                        NewListAdapter.Item a = new NewListAdapter.Item();
+                                        a.setObs(item2.get("obs").toString());
+                                        a.setProduto(item2.get("produto").toString());
+                                        a.setQtd(item2.get("qtd").toString());
+                                        itens_edit.add(a);
+                                        adapter.notifyItemInserted(0);
+
+                                    }
 
                                 }
 
