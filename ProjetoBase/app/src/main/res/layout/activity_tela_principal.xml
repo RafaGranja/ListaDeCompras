@@ -16,11 +16,9 @@
 
    <ProgressBar
         android:id="@+id/progress_bar_total"
-        android:layout_width="1px"
-        android:layout_height="1px"
-        android:visibility="visible"
-       android:indeterminate="true"
-       android:animationResolution="50"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
