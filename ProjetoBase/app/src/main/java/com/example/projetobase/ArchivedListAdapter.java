@@ -334,7 +334,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
                             HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
                             Log.d("value", "255 - " + item.toString());
                             String nome_lista = item.get("nome").toString();
-                            LocalDate datacricao = (LocalDate) item.get("datacricao");
+                            LocalDate datacricao = LocalDate.parse(item.get("datacriacao").toString());
                             List<NewListAdapter.Item> lista = new LinkedList<>();
                             List<HashMap<String, String>> nodes = (List<HashMap<String, String>>) item.get("itens");
                             for (int j = 0; j < nodes.size(); j++) {
@@ -472,7 +472,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
                             HashMap<String,Object> item = (HashMap<String, Object>)ret.get(i);
                             Log.d("value", "255 - " + item.toString());
                             String nome_lista = item.get("nome").toString();
-                            LocalDate datacricao = (LocalDate) item.get("datacricao");
+                            LocalDate datacricao = LocalDate.parse(item.get("datacriacao").toString());
                             if(!nome_lista.equals(_nome)){
 
                                 List<NewListAdapter.Item> lista = new LinkedList<>();
@@ -488,6 +488,7 @@ class ArchivedList extends RecyclerView.ViewHolder{
                                     lista.add(a);
 
                                 }
+
                                 archived.add(new Listas(nome_lista, lista,datacricao));
 
                             }

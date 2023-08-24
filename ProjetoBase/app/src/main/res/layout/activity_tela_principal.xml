@@ -14,28 +14,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ProgressBar
+   <ProgressBar
         android:id="@+id/progress_bar_total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_width="1px"
+        android:layout_height="1px"
         android:visibility="visible"
-        android:layout_margin="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/components" />
-
+       android:indeterminate="true"
+       android:animationResolution="50"/>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="?attr/colorPrimary"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_tela_principal"
-        app:menu="@menu/activity_main_drawer"
-        android:background="?attr/colorPrimary"
+        app:itemIconTint="@color/blue_light"
         app:itemTextColor="@color/blue_light"
-        app:itemIconTint="@color/blue_light" />
+        app:menu="@menu/activity_main_drawer" />
+
 </androidx.drawerlayout.widget.DrawerLayout>
